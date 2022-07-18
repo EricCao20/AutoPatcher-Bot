@@ -1,6 +1,7 @@
 #Start of Discord Bot - AutoPatcher
 
 import os
+<<<<<<< HEAD
 import discord
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -27,3 +28,8 @@ async def on_message(message):
     """
 bot.run(os.environ["BOT_TOKEN"])
 
+=======
+from dotenv import load_dotenv
+load_dotenv()
+#print(os.environ["BOT_TOKEN"])
+>>>>>>> e069aa1adf84542f45ee3bdbaa0525933cc5938b

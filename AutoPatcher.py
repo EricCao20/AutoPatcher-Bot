@@ -32,7 +32,6 @@ async def timer_end(message):
     end_timer_embedd = discord.Embed(title="Timer's up!", color = 0xFF4040)
 
     await message.send(embed = end_timer_embedd)
-#delete
 
     """
     if message.author == bot.user:

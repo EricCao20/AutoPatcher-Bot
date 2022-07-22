@@ -1,3 +1,3 @@
-# AutoPatcher
+# AutoPatcher Bot
 
 Discord Bot

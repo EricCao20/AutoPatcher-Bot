@@ -2,12 +2,13 @@
 
 from email import message
 from tabnanny import check
+from dotenv import load_dotenv
+from discord.ext import commands
+from decimal import Decimal
 import yfinance as yf
 import os
 import discord
 import asyncio
-from dotenv import load_dotenv
-from discord.ext import commands
 
 load_dotenv()
 #print(os.environ["BOT_TOKEN"])
@@ -18,35 +19,57 @@ bot = commands.Bot(command_prefix="$")
 #@client.event
 @bot.event
 async def on_ready():
+
     print('We have logged in as {0.user}'.format(bot))
 
-@bot.command(name="stock", help="Search up the price of a stock")
+@bot.command(name="price", help="Which stock would you like to search?")
 async def stock_price(ctx):
+
     stock_name = ""
     await ctx.send("What stock would you like to check?")
-    def check_author(msg): 
-        return msg.author == ctx.author and msg.channel ==ctx.channel #
+
+    def check_author(msg): #this function checks to ensure that the following input will be from the same author in the same channel
+        return msg.author == ctx.author and msg.channel == ctx.channel 
+
     msg = await bot.wait_for("message", check=check_author, timeout=10)
+
     if msg.content.upper():
-        stock_name += msg.content
-        stock = yf.Ticker(stock_name)
-        await ctx.send (stock.info["regularMarketPrice"])
+        stock_name += msg.content.upper() # capitalize the user input as yf.Ticker output is a dictionary and keys are in all caps
+        split = stock_name.split()
+        ticker = yf.Ticker(split[0]) 
+        
+        # try using match split[0] instead of if statements when refactoring
+
+        if msg.content.upper() == split[0] + " OPEN":
+            await ctx.send (f"'{split[0]}' opened at ${ticker.info['regularMarketOpen']:.2f}")
+            return
+
+        if msg.content.upper() == split[0] + " CLOSE":
+            await ctx.send (f"'{split[0]}' previously closed at ${ticker.info['previousClose']:.2f}")
+            return
+
+        else:
+            await ctx.send (f"The price of '{split[0]}' is ${ticker.info['regularMarketPrice']:.2f}")
+
     else:
         await ctx.send ("sorry you took too long!")
 
-   # def stock_name(name):
-   #     name = yf.Ticker("AMD")
-    #await stock.send (stock.info["open"])
+@bot.command(name="start", help="Starts a timer")
+async def timer_start(channel):
+    await channel.send("How long would you like the timer to last?")
 
-@bot.command(name="start", help="Starts a timer?")
-async def timer_start(message):
+    def check_author(msg): #this function checks to ensure that the following input will be from the same author in the same channel
+        return msg.author == channel.author and msg.channel == channel.channel 
+
+    msg = await bot.wait_for("message", check=check_author, timeout=10)
+
     start_timer_embedd = discord.Embed(title="Timer start!", color = 0x7FFF00)
     end_timer_embedd = discord.Embed(title="Timer's up!", color = 0x7FFF00)
-    await message.send(embed = start_timer_embedd)
-    await asyncio.sleep(0.1) #maybe after starting the count down use import time to start counting and can use that to return the time left.
-    await message.send(embed = end_timer_embedd)
+    await channel.send(embed = start_timer_embedd)
+    await asyncio.sleep(int(msg.content)) #maybe after starting the count down use import time to start counting and can use that to return the time left.
+    await channel.send(embed = end_timer_embedd)
 
-@bot.command(name="end", help="Ends the current timer")
+@bot.command(name="end", help="COMMAND INCOMPLETE")
 async def timer_end(message):
     end_timer_embedd = discord.Embed(title="Timer's up!", color = 0xFF4040)
 
@@ -59,15 +82,6 @@ async def timer_end(message):
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
     """
-
-@bot.command(name ="yallo")
-async def test(message):
-    print (message.author)
-    await message.channel.send('@{.author}!'.format(message))
-    await message.send("@")
-
-#timer = time.clock()
-
 bot.run(os.environ["BOT_TOKEN"])
 
 

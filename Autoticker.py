@@ -4,7 +4,6 @@ from email import message
 from tabnanny import check
 from dotenv import load_dotenv
 from discord.ext import commands
-from decimal import Decimal
 import yfinance as yf
 import os
 import discord
@@ -14,7 +13,8 @@ load_dotenv()
 #print(os.environ["BOT_TOKEN"])
 
 #client = discord.Client()
-bot = commands.Bot(command_prefix="$")
+intents = discord.Intents(messages=True, message_content = True)
+bot = commands.Bot(command_prefix="$", intents=intents)
 
 #@client.event
 @bot.event
@@ -36,20 +36,20 @@ async def stock_price(ctx):
     if msg.content.upper():
         stock_name += msg.content.upper() # capitalize the user input as yf.Ticker output is a dictionary and keys are in all caps
         split = stock_name.split()
-        ticker = yf.Ticker(split[0]) 
+        ticker_name = yf.Ticker(split[0]) 
         
         # try using match split[0] instead of if statements when refactoring
 
         if msg.content.upper() == split[0] + " OPEN":
-            await ctx.send (f"'{split[0]}' opened at ${ticker.info['regularMarketOpen']:.2f}")
+            await ctx.send (f"'{split[0]}' opened at ${ticker_name.info['regularMarketOpen']:.2f}")
             return
 
         if msg.content.upper() == split[0] + " CLOSE":
-            await ctx.send (f"'{split[0]}' previously closed at ${ticker.info['previousClose']:.2f}")
+            await ctx.send (f"'{split[0]}' previously closed at ${ticker_name.info['previousClose']:.2f}")
             return
 
         else:
-            await ctx.send (f"The price of '{split[0]}' is ${ticker.info['regularMarketPrice']:.2f}")
+            await ctx.send (f"The price of '{split[0]}' is ${ticker_name.info['regularMarketPrice']:.2f}")
 
     else:
         await ctx.send ("sorry you took too long!")

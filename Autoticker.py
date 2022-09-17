@@ -18,6 +18,8 @@ async def on_ready():
 
     print('We have logged in as {0.user}'.format(bot))
 
+#@bot.command(name="help")
+
 bot.add_cog(Stock(bot))
 
 bot.add_cog(Timer(bot))

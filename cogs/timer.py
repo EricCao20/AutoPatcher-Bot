@@ -29,7 +29,7 @@ class Timer(commands.Cog):
             end_timer_embedd = discord.Embed(title="Timer's up!", color = 0x7FFF00)
             await channel.send(embed = start_timer_embedd)
             await asyncio.sleep(time_value) #maybe after starting the count down use import time to start counting and can use that to return the time left.
-            await channel.send(f"{channel.author.mention} {end_timer_embedd}")
+            await channel.send(f"{channel.author.mention}")
             await channel.send(embed = end_timer_embedd)
             
         except ValueError:

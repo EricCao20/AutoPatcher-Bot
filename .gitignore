@@ -1,7 +1,5 @@
 .env
 .vscode/launch.json
-test.py
-test2.py
-__pycache__/test2.cpython-38.pyc
-__pycache__/AutoPatcher.cpython-38.pyc
+__pycache__/
 yf.py
+Test/

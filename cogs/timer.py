@@ -8,6 +8,7 @@ class Timer(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.time_value = 0
         
     @commands.Cog.listener()
     async def on_ready(self):
@@ -19,16 +20,18 @@ class Timer(commands.Cog):
 
         def check_author(msg): #this function checks to ensure that the following input will be from the same author in the same channel
             return msg.author == channel.author and msg.channel == channel.channel 
+            
         try:
 
             msg = await self.bot.wait_for("message", check=check_author, timeout=10)
 
-            time_value = (float(msg.content) * 60)
-        
+            self.time_value = (float(msg.content) * 60)
+
             start_timer_embedd = discord.Embed(title="Timer start!", color = 0x7FFF00)
-            end_timer_embedd = discord.Embed(title="Timer's up!", color = 0x7FFF00)
+            end_timer_embedd = discord.Embed(title="Timer's up!", color = 0xFF0000)
+
             await channel.send(embed = start_timer_embedd)
-            await asyncio.sleep(time_value) #maybe after starting the count down use import time to start counting and can use that to return the time left.
+            await asyncio.sleep(self.time_value) #maybe after starting the count down use import time to start counting and can use that to return the time left.
             await channel.send(f"{channel.author.mention}")
             await channel.send(embed = end_timer_embedd)
             
@@ -40,17 +43,10 @@ class Timer(commands.Cog):
 
     @commands.command()
     async def timer_end(self, channel):
-        end_timer_embedd = discord.Embed(title="Timer's up!", color = 0xFF4040)
+        end_timer_embedd = discord.Embed(title="Timer's up!", color = 0xFF0000)
         await channel.send(embed = end_timer_embedd)
 
-        """
-        if message.author == bot.user:
-            return
-
-        if message.content.startswith('$hello'):
-            await message.channel.send('Hello!')
-        """
     @commands.command()
     async def dm (self, ctx):
-        await ctx.author.send("face of zed")
+        await ctx.author.send("Hi there")
 

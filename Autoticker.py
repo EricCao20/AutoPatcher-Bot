@@ -6,19 +6,18 @@ from cogs.timer import Timer
 from cogs.stock import Stock
 from dotenv import load_dotenv
 from discord.ext import commands
+#from cogs.general import Help
 
 load_dotenv()
 
-#client = discord.Client(command_prefix="$",)
-#intents = discord.Intents(messages=True, message_content = True)
 bot = commands.Bot(command_prefix="$")
 
 @bot.event
 async def on_ready():
 
-    print('We have logged in as {0.user}'.format(bot))
+    print('We have logged in as {}'.format(bot.user))
 
-#@bot.command(name="help")
+#bot.add_cog(Help(bot))
 
 bot.add_cog(Stock(bot))
 

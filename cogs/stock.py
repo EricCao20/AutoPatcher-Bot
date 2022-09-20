@@ -28,9 +28,14 @@ class Stock(commands.Cog): # every command or function related to the value or i
             if msg.content.upper()!= ("STOP"):
                 self.user_input += msg.content.upper() #ioawhdoasd
                 self.split = self.user_input.split() 
-                self.ticker = yf.Ticker(self.split[0])
-                print(self.split[0], key)
-                self.stock_price = self.ticker.info.get(key, default = "Undefined key")
+                self.ticker = yf.Ticker(self.split[0])              # using a ticker that doesn't exist causes the dictonary when you do object.info to be 
+                if self.ticker.info.get("regularMarketPrice") != None:  # {'regularMarketPrice': None, 'preMarketPrice': None, 'logo_url': ''} -- Cause of the none issue headache
+                    print(self.split[0], key)
+                    self.stock_price = self.ticker.info.get(key)
+                    print ("after if", self.stock_price)
+
+                else:
+                    return await ctx.send("You entered an invalid stock.")
 
             else:
                 return await ctx.send("the command has been canceled.")
@@ -38,8 +43,11 @@ class Stock(commands.Cog): # every command or function related to the value or i
         except asyncio.TimeoutError:
             return await ctx.send ("Sorry you took too long!")
 
-        except:
-            return await ctx.send ("You entered an invalid stock.")
+        except IndexError:
+            return await ctx.send ("You did not enter an alert price.")
+
+        else:
+            return self.stock_price
             
     async def history(self):
         return
@@ -49,7 +57,7 @@ class Stock(commands.Cog): # every command or function related to the value or i
         stock_class = self.bot.get_cog('Stock')
         await ctx.send(f"{ctx.message.author}, what stock would you like to check?")
         await stock_class.get_input(ctx, 'regularMarketPrice')
-        print(self.stock_price, self.split[0])
+        print("reached here", self.stock_price, self.split[0])
         if self.stock_price != 0:
             await ctx.send (f"The price of '{self.split[0]}' is ${self.stock_price:.2f}")
 
@@ -58,15 +66,16 @@ class Stock(commands.Cog): # every command or function related to the value or i
         stock_class = self.bot.get_cog('Stock')
         await ctx.send(f"{ctx.message.author}, what stock would you like to check?")
         await stock_class.get_input(ctx, "regularMarketOpen")
-        print(self.user_input, self.stock_price, self.split)
+        print("reached here", self.stock_price, self.split[0])
         if self.stock_price != 0:
             await ctx.send (f"'{self.split[0]}' last opened at ${self.stock_price:.2f}")
 
     @commands.command()
-    async def close (self, ctx):
+    async def close (self, ctx): # returns the close price of the PREVIOUS trading session
         stock_class = self.bot.get_cog('Stock')
         await ctx.send(f"{ctx.message.author}, what stock would you like to check?")
         await stock_class.get_input(ctx, "previousClose")
+        print("reached here", self.stock_price, self.split[0])
         if self.stock_price != 0:
             await ctx.send (f"'{self.split[0]}' previously closed at ${self.stock_price:.2f}")
 

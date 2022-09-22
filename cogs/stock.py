@@ -4,7 +4,6 @@ import yfinance as yf
 from discord.ext import commands, tasks
 from decimal import Decimal
 
-INPUT_RECIEVED = False
 class Stock(commands.Cog): # every command or function related to the value or information of the stocks are here
 
     def __init__(self, bot):
@@ -57,9 +56,6 @@ class Stock(commands.Cog): # every command or function related to the value or i
         except IndexError:
             return await ctx.send ("You did not enter an alert price.")
 
-    #async def history(self):
-    #    return
-
     @commands.command()
     async def price (self, ctx):
         stock_class = self.bot.get_cog('Stock')
@@ -87,54 +83,55 @@ class Stock(commands.Cog): # every command or function related to the value or i
         if self.ticker_price != 0:
             await ctx.send (f"'{self.split[0]}' previously closed at ${self.ticker_price:.2f}")
 
-    #@commands()
-
     @commands.command()
     async def higher(self, ctx):
-        #if INPUT_RECIEVED != True:
         stock_class = self.bot.get_cog('Stock')
         await ctx.send(f"{ctx.message.author}, please input stock and price target, do not include a '$'.")
         await stock_class.stock_input(ctx, "regularMarketPrice")
- 
-        #alert_price = float(self.split[1])
-        #stock_price = self.stock_price
-        #INPUT_RECIEVED = True
-        
-        @tasks.loop(seconds = 15.0)
-        async def loop(ctx, ticker, alert_price, stock_price):
-            #await asyncio.sleep(15)
-            alert_price = float(alert_price)
-            if stock_price < alert_price:    # while the stock's price is less than the alert price                  #76.51    <    80  
-                stock_price = ticker.info['regularMarketPrice']                                                     #price     split[1], input                                        
-                print (alert_price)
-            elif stock_price >= alert_price:
-                await ctx.send(f"{ctx.author.mention} your stock has reached or beaten the targeted price of ${alert_price:.2f}!")  
-                loop.cancel()
         
         if self.ticker_price != 0:
             await ctx.send("The alert has been set!")
-            loop.start(ctx, self.ticker_name, self.split[1], self.ticker_price)
+            higher_loop.start(ctx, self.ticker_name, self.split[1], self.ticker_price)
 
     @commands.command()
     async def lower(self, ctx):
+
         stock_class = self.bot.get_cog('Stock')
         await ctx.send(f"{ctx.message.author}, please input stock and price target, do not include a '$'.")
         await stock_class.stock_input(ctx, "regularMarketPrice")
         
-
-        @tasks.loop(seconds = 15.0)
-        async def loop(ctx, ticker, alert_price, stock_price):
-            #await asyncio.sleep(15)
-            alert_price = float(alert_price)
-            if stock_price > alert_price:    # while the stock's price is less than the alert price                  #76.51    <    80  
-                stock_price = ticker.info['regularMarketPrice']                                                     #price     split[1], input                                        
-                print (alert_price)
-            elif stock_price <= alert_price:
-                await ctx.send(f"{ctx.author.mention} your stock has reached or beaten the targeted price of ${alert_price:.2f}!")  
-                loop.cancel()
-
         if self.ticker_price != 0:
             await ctx.send("The alert has been set!")
-            loop.start(ctx, self.ticker_name, self.split[1], self.ticker_price)
-        #alert_price = float(self.split[1])
-        #stock_price = self.stock_price
+            lower_loop.start(ctx, self.ticker_name, self.split[1], self.ticker_price)
+
+    @commands.command()
+    async def cancelhigher(self, ctx):
+        higher_loop.cancel()
+        await ctx.send("worked")
+
+    @commands.command()
+    async def cancellower(self, ctx):
+        lower_loop.cancel()
+        await ctx.send("worked")
+
+@tasks.loop(seconds = 15.0)
+async def higher_loop(ctx, ticker, alert_price, stock_price):
+    alert_price = float(alert_price)
+
+    if stock_price < alert_price:    # while the stock's price is less than the alert price                  #76.51    <    80  
+        stock_price = ticker.info['regularMarketPrice']                                                     #price     split[1], input                                        
+        print (alert_price)
+
+    if stock_price >= alert_price:
+        await ctx.send(f"{ctx.author.mention} your stock has reached or beaten the targeted price of ${alert_price:.2f}!")  
+        higher_loop.cancel()
+
+@tasks.loop(seconds = 15.0)
+async def lower_loop(ctx, ticker, alert_price, stock_price):
+    alert_price = float(alert_price)
+    if stock_price > alert_price:    # while the stock's price is less than the alert price                  #76.51    <    80  
+        stock_price = ticker.info['regularMarketPrice']                                                     #price     split[1], input                                        
+        print (alert_price)
+    if stock_price <= alert_price:
+        await ctx.send(f"{ctx.author.mention} your stock has reached or beaten the targeted price of ${alert_price:.2f}!")  
+        lower_loop.cancel()

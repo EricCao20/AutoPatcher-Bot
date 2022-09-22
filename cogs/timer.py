@@ -40,7 +40,8 @@ class Timer(commands.Cog):
         
         except:
             await channel.send ("Sorry you took too long.")
-
+            
+    """
     @commands.command()
     async def timer_end(self, channel):
         end_timer_embedd = discord.Embed(title="Timer's up!", color = 0xFF0000)
@@ -50,3 +51,4 @@ class Timer(commands.Cog):
     async def dm (self, ctx):
         await ctx.author.send("Hi there")
 
+"""

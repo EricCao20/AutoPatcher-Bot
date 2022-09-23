@@ -44,7 +44,7 @@ class Stock(commands.Cog): # every command or function related to the value or i
                     print ("after if", self.ticker_price)
 
                 else:
-                    await ctx.send("You entered an invalid stock.")
+                    await ctx.send("You entered an invalid input.")
                     return self.ticker_price
 
             else:
@@ -85,24 +85,61 @@ class Stock(commands.Cog): # every command or function related to the value or i
 
     @commands.command()
     async def higher(self, ctx):
-        stock_class = self.bot.get_cog('Stock')
-        await ctx.send(f"{ctx.message.author}, please input stock and price target, do not include a '$'.")
-        await stock_class.stock_input(ctx, "regularMarketPrice")
-        
-        if self.ticker_price != 0:
-            await ctx.send("The alert has been set!")
-            higher_loop.start(ctx, self.ticker_name, self.split[1], self.ticker_price)
+        global higher_loop
+
+        try:
+            stock_class = self.bot.get_cog('Stock')
+            await ctx.send(f"{ctx.message.author}, please input stock and price target, do not include a '$'.")
+            await stock_class.stock_input(ctx, "regularMarketPrice")
+
+            @tasks.loop(seconds = 45.0)
+            async def higher_loop(ctx, ticker, alert_price, stock_price):
+                alert_price = float(alert_price)
+                ticker = yf.Ticker(ticker)
+                if stock_price < alert_price:    # while the stock's price is less than the alert price                  #76.51    <    80  
+                    stock_price = ticker.info['regularMarketPrice']                                                   #price     split[1], input       
+                    print (ticker)                                 
+                    print (stock_price, alert_price)
+
+                if stock_price >= alert_price:
+                    await ctx.send(f"{ctx.author.mention} your stock has reached or beaten the targeted price of ${alert_price:.2f}!")  
+                    higher_loop.cancel()
+            
+            if self.ticker_price != 0:
+                await ctx.send("The alert has been set!")
+                higher_loop.start(ctx, self.split[0], self.split[1], self.ticker_price)
+
+        except RuntimeError:
+            await ctx.send("A high alert has already been set.")
 
     @commands.command()
     async def lower(self, ctx):
+        global lower_loop
 
-        stock_class = self.bot.get_cog('Stock')
-        await ctx.send(f"{ctx.message.author}, please input stock and price target, do not include a '$'.")
-        await stock_class.stock_input(ctx, "regularMarketPrice")
+        try:
+            stock_class = self.bot.get_cog('Stock')
+            await ctx.send(f"{ctx.message.author}, please input stock and price target, do not include a '$'.")
+            await stock_class.stock_input(ctx, "regularMarketPrice")
+
+            @tasks.loop(seconds = 45.0)
+            async def lower_loop(ctx, ticker, alert_price, stock_price):
+                alert_price = float(alert_price)
+                ticker = yf.Ticker(ticker)
+                
+                if stock_price > alert_price:    # while the stock's price is less than the alert price                  #76.51    <    80  
+                    stock_price = ticker.info['regularMarketPrice']                                                     #price     split[1], input                                        
+                    print (stock_price, alert_price)
+
+                if stock_price <= alert_price:
+                    await ctx.send(f"{ctx.author.mention} your stock has reached or beaten the targeted price of ${alert_price:.2f}!")  
+                    lower_loop.cancel()
+            
+            if self.ticker_price != 0:
+                await ctx.send("The alert has been set!")
+                lower_loop.start(ctx, self.split[0], self.split[1], self.ticker_price)
         
-        if self.ticker_price != 0:
-            await ctx.send("The alert has been set!")
-            lower_loop.start(ctx, self.ticker_name, self.split[1], self.ticker_price)
+        except RuntimeError:
+            await ctx.send("A low alert has already been set.")
 
     @commands.command()
     async def cancelhigher(self, ctx):
@@ -113,25 +150,3 @@ class Stock(commands.Cog): # every command or function related to the value or i
     async def cancellower(self, ctx):
         lower_loop.cancel()
         await ctx.send("worked")
-
-@tasks.loop(seconds = 15.0)
-async def higher_loop(ctx, ticker, alert_price, stock_price):
-    alert_price = float(alert_price)
-
-    if stock_price < alert_price:    # while the stock's price is less than the alert price                  #76.51    <    80  
-        stock_price = ticker.info['regularMarketPrice']                                                     #price     split[1], input                                        
-        print (alert_price)
-
-    if stock_price >= alert_price:
-        await ctx.send(f"{ctx.author.mention} your stock has reached or beaten the targeted price of ${alert_price:.2f}!")  
-        higher_loop.cancel()
-
-@tasks.loop(seconds = 15.0)
-async def lower_loop(ctx, ticker, alert_price, stock_price):
-    alert_price = float(alert_price)
-    if stock_price > alert_price:    # while the stock's price is less than the alert price                  #76.51    <    80  
-        stock_price = ticker.info['regularMarketPrice']                                                     #price     split[1], input                                        
-        print (alert_price)
-    if stock_price <= alert_price:
-        await ctx.send(f"{ctx.author.mention} your stock has reached or beaten the targeted price of ${alert_price:.2f}!")  
-        lower_loop.cancel()

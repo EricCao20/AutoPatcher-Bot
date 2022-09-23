@@ -52,7 +52,7 @@ class Games(commands.Cog):
             return msg.author == ctx.author and msg.channel == ctx.channel 
 
         try:
-            msg = await self.bot.wait_for("message", check=check_author, timeout=10)
+            msg = await self.bot.wait_for("message", check=check_author, timeout=15)
 
             if msg.content.upper() != ("STOP"):
 

@@ -144,9 +144,9 @@ class Stock(commands.Cog): # every command or function related to the value or i
     @commands.command()
     async def cancelhigher(self, ctx):
         higher_loop.cancel()
-        await ctx.send("worked")
+        await ctx.send("The alert has been canceled")
 
     @commands.command()
     async def cancellower(self, ctx):
         lower_loop.cancel()
-        await ctx.send("worked")
+        await ctx.send("The alert has been canceled")

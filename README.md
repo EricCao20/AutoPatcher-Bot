@@ -1,4 +1,4 @@
-# AutoTicker Bot, currently not deployed
+# AutoTicker Bot
 
 Hi, welcome to my discord bot!
 

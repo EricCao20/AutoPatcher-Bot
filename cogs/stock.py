@@ -2,7 +2,6 @@ import asyncio
 import discord
 import yfinance as yf
 from discord.ext import commands, tasks
-from decimal import Decimal
 
 class Stock(commands.Cog): # every command or function related to the value or information of the stocks are here
 
@@ -37,11 +36,10 @@ class Stock(commands.Cog): # every command or function related to the value or i
             if msg.content.upper()!= ("STOP"):
                 self.user_input += msg.content.upper()
                 self.split = self.user_input.split() 
-                self.ticker_name = yf.Ticker(self.split[0])              # using a ticker that doesn't exist causes the dictonary when you do object.info to be 
-                if self.ticker_name.info.get("regularMarketPrice") != None:  # {'regularMarketPrice': None, 'preMarketPrice': None, 'logo_url': ''} -- Cause of the none issue headache
-                    print(self.split[0], key)
+                self.ticker_name = yf.Ticker(self.split[0])
+                print (self.ticker_name.info)              # using a ticker that doesn't exist causes the dictonary when you do object.info to be 
+                if self.ticker_name.info != None:  # {'regularMarketPrice': None, 'preMarketPrice': None, 'logo_url': ''} -- Cause of the none issue headache
                     self.ticker_price = self.ticker_name.info.get(key)
-                    print ("after if", self.ticker_price)
 
                 else:
                     await ctx.send("You entered an invalid input.")
@@ -56,10 +54,13 @@ class Stock(commands.Cog): # every command or function related to the value or i
         except IndexError:
             return await ctx.send ("You did not enter an alert price.")
 
+        #finally:
+        #    return await ctx.send ("RIP")
+
     @commands.command()
     async def price (self, ctx):
         stock_class = self.bot.get_cog('Stock')
-        await ctx.send(f"{ctx.message.author}, what stock would you like to check?")
+        await ctx.send(f"{ctx.message.author}, what equity would you like to check?")
         await stock_class.stock_input(ctx, 'regularMarketPrice')
         print("reached here", self.ticker_price, self.split[0])
         if self.ticker_price != 0:
@@ -68,7 +69,7 @@ class Stock(commands.Cog): # every command or function related to the value or i
     @commands.command()
     async def open (self, ctx):
         stock_class = self.bot.get_cog('Stock')
-        await ctx.send(f"{ctx.message.author}, what stock would you like to check?")
+        await ctx.send(f"{ctx.message.author}, what equity would you like to check?")
         await stock_class.stock_input(ctx, "regularMarketOpen")
         print("reached here", self.ticker_price, self.split[0])
         if self.ticker_price != 0:
@@ -77,7 +78,7 @@ class Stock(commands.Cog): # every command or function related to the value or i
     @commands.command()
     async def close (self, ctx): # returns the close price of the PREVIOUS trading session
         stock_class = self.bot.get_cog('Stock')
-        await ctx.send(f"{ctx.message.author}, what stock would you like to check?")
+        await ctx.send(f"{ctx.message.author}, what equity would you like to check?")
         await stock_class.stock_input(ctx, "previousClose")
         print("reached here", self.ticker_price, self.split[0])
         if self.ticker_price != 0:
@@ -89,7 +90,7 @@ class Stock(commands.Cog): # every command or function related to the value or i
 
         try:
             stock_class = self.bot.get_cog('Stock')
-            await ctx.send(f"{ctx.message.author}, please input stock and price target, do not include a '$'.")
+            await ctx.send(f"{ctx.message.author}, please input name and price target, do not include a '$'.")
             await stock_class.stock_input(ctx, "regularMarketPrice")
 
             @tasks.loop(seconds = 45.0)
@@ -98,8 +99,6 @@ class Stock(commands.Cog): # every command or function related to the value or i
                 ticker = yf.Ticker(ticker)
                 if stock_price < alert_price:    # while the stock's price is less than the alert price                  #76.51    <    80  
                     stock_price = ticker.info['regularMarketPrice']                                                   #price     split[1], input       
-                    print (ticker)                                 
-                    print (stock_price, alert_price)
 
                 if stock_price >= alert_price:
                     await ctx.send(f"{ctx.author.mention} your stock has reached or beaten the targeted price of ${alert_price:.2f}!")  
@@ -118,7 +117,7 @@ class Stock(commands.Cog): # every command or function related to the value or i
 
         try:
             stock_class = self.bot.get_cog('Stock')
-            await ctx.send(f"{ctx.message.author}, please input stock and price target, do not include a '$'.")
+            await ctx.send(f"{ctx.message.author}, please input name and price target, do not include a '$'.")
             await stock_class.stock_input(ctx, "regularMarketPrice")
 
             @tasks.loop(seconds = 45.0)

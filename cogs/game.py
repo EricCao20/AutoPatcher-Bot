@@ -4,7 +4,6 @@ import os
 import pandas as pd
 import yfinance as yf
 from discord.ext import commands
-from cogs.stock import Stock
 from pathlib import Path
 
 class Games(commands.Cog):
@@ -15,7 +14,6 @@ class Games(commands.Cog):
         self.ticker_name = ""
         self.ticker_price = 0
         self.historical_price = 0
-        #self.balance = 10000
 
     def read_file (self, want_single_number): # randomly select a ticker from tickers.txt and get 3 months of close price data.
         self.ticker_name = ""
@@ -32,7 +30,7 @@ class Games(commands.Cog):
             path = Path(f"GameCsv/ticker_{self.ticker_name[0]}.csv")
             dataframe = pd.concat([pd.read_csv(path)]) #have to send as a list
 
-            if want_single_number == True:
+            if want_single_number:
                 self.historical_price = dataframe.iloc[0,4]
                 os.remove(f"GameCsv/ticker_{self.ticker_name[0]}.csv")
                 return self.historical_price

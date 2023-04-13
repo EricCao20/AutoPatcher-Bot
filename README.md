@@ -9,7 +9,7 @@ Autoticker is a bot to help you with everyday trading by allowing you to see the
 <h1></h1>
 
 <div style="margin-bottom:20px">
-<p> Showcase of some of the basic commands, such as $price to check the current price and $open to check the opening price of an equity for the day. </p>
+<p> Here is a showcase of some of the basic commands, such as $price to check the current price and $open to check the opening price of an equity for the day. </p>
 </div>
 
 <p align="center">

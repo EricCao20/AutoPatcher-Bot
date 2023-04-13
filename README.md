@@ -4,12 +4,8 @@ Hi, welcome to my discord bot!
 
 This bot can send the real-time prices of equities listed on Yahoo! Finance, set price alerts and more.
 
-<p align="center">
-<img src="./assets/boticon.PNG" alt="image 1" style="float:left;width:66%">
-</p>
-
 <div>
-FoodFindr is an app to help you find easy meals to prepare to save you the headache of coming up with recipes yourself using OpenAI and Edamam APIs. You'll be given all the instructions needed to prepare the meal along with all the nutrition information to help with your meal planning.
+Autoticker is a bot to help you with everyday trading by allowing you to see the current, opening, and previous closing price using yfinance, a library that scrapes  FoodFindr is an app to help you find easy meals to prepare to save you the headache of coming up with recipes yourself using OpenAI and Edamam APIs. You'll be given all the instructions needed to prepare the meal along with all the nutrition information to help with your meal planning.
 </div>
 
 <br> </br>
@@ -21,8 +17,9 @@ FoodFindr is an app to help you find easy meals to prepare to save you the heada
 </div>
 
 <p align="center">
-  <img src="./assets/home.png" alt="image 1" style="float:left;width:33%;margin-right:10%;" align="center">
-  <img src="./assets/select.png" alt="image 2" style="float:left;width:33%;margin-right:1%;" align="center">
+  <img src="./assets/stockprice.PNG" alt="image 1" style="float:left;width:33%;margin-right:10%;" align="center">
+  <img src="./assets/open.PNG" alt="image 2" style="float:left;width:33%;margin-right:1%;" align="center">
+  <img src="./assets/close.PNG" alt="image 2" style="float:left;width:33%;margin-right:1%;" align="center">
 </p>
 
 <br> </br>

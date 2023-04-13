@@ -1,4 +1,4 @@
-#Start of Discord Bot - AutoTicker
+#Start of Discord Bot - AutoTicker, developed using yfinance 0.2.4, discord.py 1.7.3, pandas 1.4.4
 
 import discord
 import os

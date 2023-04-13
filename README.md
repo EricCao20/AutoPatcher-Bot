@@ -3,7 +3,7 @@
 Hi, welcome to my Discord bot!
 
 <div>
-Autoticker is a bot to help you with everyday trading by allowing you to see the current, opening, and previous closing price of equities that are listed on Yahoo! Finance using yfinance, a library that collects real-time market data and sends it back to the Discord client. In addition, you can also set stock price alerts where once your equity reaches the desired price you'll be given an @ notification on Discord. Also feel free to pass some time by enjoying the stock price guessing game included in the bot as well.
+Autoticker is a bot to help you with everyday trading by allowing you to see the current, opening, and previous closing price of equities that are listed on Yahoo! Finance using yfinance, a library that collects real-time market data and is sent back to the Discord client. In addition, you can also set stock price alerts where once your equity reaches the desired price you'll be given an @ notification on Discord. A stock price guessing game is also included to help in the bot as well to help you pass the time when needed.
 </div>
 
 <h1></h1>
@@ -13,8 +13,7 @@ Autoticker is a bot to help you with everyday trading by allowing you to see the
 </div>
 
 <p align="center">
-  <img src="./assets/stockprice.PNG" alt="image 1" style="float:left;width:45%;margin-right:10%;" align="center">
-  <img src="./assets/open.PNG" alt="image 2" style="float:left;width:45%;margin-right:1%;" align="center">
+  <img src="./assets/stockprice.PNG" alt="image 1" style="float:left;width:60%;margin-right:10%;" align="center">
   
 </p>
 

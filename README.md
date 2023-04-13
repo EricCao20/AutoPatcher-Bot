@@ -31,7 +31,7 @@ Autoticker is a bot to help you with everyday trading by allowing you to see the
 <br> </br>
 
 <div style="margin-bottom:20px">
-<p> The $guess command will select a random ticker and retrieve its closing price from 3 months earlier and ask you to guess the whether or not its current price is higher or lower than the historical price. </p>
+<p> The $guess command will select a random ticker and retrieve its closing price from 3 months earlier and ask you to guess whether or not its current price is higher or lower than the historical price. </p>
 </div>
 
 <p align="center">
